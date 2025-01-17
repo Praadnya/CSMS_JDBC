@@ -3,6 +3,7 @@ package com.cars24.dao.impl;
 import com.cars24.dao.CustomerDao;
 import com.cars24.data.req.AddCustomerReq;
 import com.cars24.data.req.CustomerProfileReq;
+import com.cars24.data.req.UpdateCustomerReq;
 import com.cars24.data.res.CustomerProfileRes;
 import com.cars24.util.DbUtil;
 
@@ -11,25 +12,11 @@ import java.sql.*;
 public class CustomerDaoImpl implements CustomerDao {
     private static final String INSERT_SUCCESS_MESSAGE = "Customer added successfully!";
     private static final String INSERT_ERROR_MESSAGE = "Error while adding Customer!!";
-//    @Override
-//    public String createCustomer(String name, String phone, String email, String address) {
-//        String insertSQL = "INSERT INTO customers (customer_id, name, phone, email, address) VALUES("
-//                +0+","
-//                +"'"+name+"',"
-//                +"'"+phone+"',"
-//                +"'"+email+"',"
-//                +"'"+address+"');";
-//
-//        Connection connection = DbUtil.getDbConnection();
-//
-//        try(Statement statement = connection.createStatement()){
-//            int rowsInserted = statement.executeUpdate(insertSQL);
-//            return INSERT_SUCCESS_MESSAGE;
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            return INSERT_ERROR_MESSAGE;
-//        }
-//    }
+    private static final String SELECT_ERROR_MESSAGE = "Error while getting Customer profile!!";
+    private static final String DELETE_SUCCESS_MESSAGE = "Customer deleted successfully!";
+    private static final String DELETE_ERROR_MESSAGE = "Error while deleting Customer profile!!";
+    private static final String UPDATE_SUCCESS_MESSAGE = "Customer profile updated successfully!";
+    private static final String UPDATE_ERROR_MESSAGE = "Error while updating Customer profile!!";
 
     @Override
     public String createCustomer(AddCustomerReq addCustomerReq) {
@@ -44,7 +31,7 @@ public class CustomerDaoImpl implements CustomerDao {
             preparedStatement.setString(3,addCustomerReq.getPhone());
             preparedStatement.setString(4,addCustomerReq.getEmail());
             preparedStatement.setString(5,addCustomerReq.getAddress());
-            int rowsInserted = preparedStatement.executeUpdate();
+            preparedStatement.executeUpdate();
             return INSERT_SUCCESS_MESSAGE;
         } catch (SQLException e) {
             return INSERT_ERROR_MESSAGE;
@@ -59,15 +46,11 @@ public class CustomerDaoImpl implements CustomerDao {
             PreparedStatement preparedStatement = connection.prepareStatement(deleteSQL);
             preparedStatement.setString(1, customerProfileReq.getEmail());
             preparedStatement.setString(2, customerProfileReq.getPhone());
-            int rowsAffected = preparedStatement.executeUpdate();
+            preparedStatement.executeUpdate();
+            return DELETE_SUCCESS_MESSAGE;
 
-            if (rowsAffected > 0) {
-                return "Customer deleted successfully!";
-            } else {
-                return "Customer not found!";
-            }
         }catch(SQLException e){
-            return "An error occurred while deleting the customer!";
+            return DELETE_ERROR_MESSAGE;
         }
     }
 
@@ -90,9 +73,62 @@ public class CustomerDaoImpl implements CustomerDao {
                     }
                     return customerProfileRes;
         }catch(SQLException e){
-            System.out.println("Data NOT FOUND");
+            System.out.println(SELECT_ERROR_MESSAGE);
         }
         return null;
+    }
+
+    @Override
+    public String updateCustomer(UpdateCustomerReq updateCustomerReq) {
+        StringBuilder updateSQL = getUpdateQuery(updateCustomerReq);
+
+        Connection connection = DbUtil.getDbConnection();
+
+        try{
+            PreparedStatement preparedStatement = connection.prepareStatement(updateSQL.toString());
+            int parameterIndex = 1;
+
+            if (updateCustomerReq.getUpdatedName() != null) {
+                preparedStatement.setString(parameterIndex++, updateCustomerReq.getUpdatedName());
+            }
+            if (updateCustomerReq.getUpdatedPhone() != null) {
+                preparedStatement.setString(parameterIndex++, updateCustomerReq.getUpdatedPhone());
+            }
+            if (updateCustomerReq.getUpdatedEmail() != null) {
+                preparedStatement.setString(parameterIndex++, updateCustomerReq.getUpdatedEmail());
+            }
+            if (updateCustomerReq.getUpdatedAddress() != null) {
+                preparedStatement.setString(parameterIndex++, updateCustomerReq.getUpdatedAddress());
+            }
+
+            preparedStatement.setString(parameterIndex++, updateCustomerReq.getCurrentEmail());
+            preparedStatement.setString(parameterIndex, updateCustomerReq.getCurrentPhone());
+
+            preparedStatement.executeUpdate();
+            return UPDATE_SUCCESS_MESSAGE;
+        }catch (SQLException e){
+            return UPDATE_ERROR_MESSAGE;
+        }
+
+    }
+
+    private static StringBuilder getUpdateQuery(UpdateCustomerReq updateCustomerReq) {
+        StringBuilder updateSQL = new StringBuilder("UPDATE customers SET ");
+        if(updateCustomerReq.getUpdatedName() != null){
+            updateSQL.append("name = ?, ");
+        }
+        if(updateCustomerReq.getUpdatedPhone() != null){
+            updateSQL.append("phone = ?, ");
+        }
+        if(updateCustomerReq.getUpdatedEmail() != null){
+            updateSQL.append("email = ?, ");
+        }
+        if(updateCustomerReq.getUpdatedAddress() != null){
+            updateSQL.append("address = ?, ");
+        }
+        updateSQL.setLength(updateSQL.length() - 2);
+        updateSQL.append(" WHERE email = ? OR phone = ?");
+        return updateSQL;
     }
 
 }

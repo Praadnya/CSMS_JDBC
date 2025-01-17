@@ -1,7 +1,6 @@
 package com.cars24.validation;
 
 import com.cars24.data.req.AddCustomerReq;
-import com.cars24.data.req.CustomerProfileReq;
 
 public class CustomerValidator {
     public static void validateAddCustomerReq(AddCustomerReq addCustomerReq) {
@@ -24,7 +23,7 @@ public class CustomerValidator {
         if(phone == null){
             throw new IllegalArgumentException("Phone Number cannot be EMPTY!!");
         }
-        if(phone.length() != 10) {
+        if(phone.length() != 10 || !phone.matches("\\d+")) {
             throw new IllegalArgumentException("Phone Number must be 10 digits only!!");
         }
     }

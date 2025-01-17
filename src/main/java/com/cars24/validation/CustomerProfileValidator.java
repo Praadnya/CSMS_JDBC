@@ -16,7 +16,7 @@ public class CustomerProfileValidator {
     }
 
     private static void validateCustomerPhone(String phone){
-        if(phone.length() != 10) {
+        if(phone.length() != 10 || !phone.matches("\\d+")) {
             throw new IllegalArgumentException("Phone Number must be 10 digits only!!");
         }
     }
