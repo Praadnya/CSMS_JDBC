@@ -52,6 +52,26 @@ public class CustomerDaoImpl implements CustomerDao {
     }
 
     @Override
+    public String deleteCustomer(CustomerProfileReq customerProfileReq) {
+        String deleteSQL = "DELETE FROM customers WHERE email = ? OR phone = ?";
+        Connection connection = DbUtil.getDbConnection();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(deleteSQL);
+            preparedStatement.setString(1, customerProfileReq.getEmail());
+            preparedStatement.setString(2, customerProfileReq.getPhone());
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            if (rowsAffected > 0) {
+                return "Customer deleted successfully!";
+            } else {
+                return "Customer not found!";
+            }
+        }catch(SQLException e){
+            return "An error occurred while deleting the customer!";
+        }
+    }
+
+    @Override
     public CustomerProfileRes getCustomer(CustomerProfileReq customerProfileReq) {
         String selectSQL = "SELECT name, phone, email, address FROM customers WHERE email = ? OR phone = ?";
         Connection connection = DbUtil.getDbConnection();

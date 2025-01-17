@@ -8,8 +8,8 @@ import com.cars24.services.impl.CustomerServiceImpl;
 import java.util.Scanner;
 
 public class Ui {
-    private static CustomerServiceImpl customerServiceImpl = new CustomerServiceImpl();
-    private static Scanner scanner  = new Scanner(System.in);
+    private static final CustomerServiceImpl customerServiceImpl = new CustomerServiceImpl();
+    private static final Scanner scanner  = new Scanner(System.in);
     public static void addCustomer()
     {
         System.out.println("Enter customer details");
@@ -43,6 +43,21 @@ public class Ui {
         CustomerProfileRes customerProfileRes = customerServiceImpl.getCustomerProfile(customerProfileReq);
         System.out.println(customerProfileRes);
 
+    }
+
+    public static void deleteCustomer(){
+        System.out.println("To be deleted customer details");
+        CustomerProfileReq customerProfileReq = new CustomerProfileReq();
+        System.out.print("Enter Email  : ");
+        scanner.nextLine();
+        String emailInput = scanner.nextLine();
+        customerProfileReq.setEmail(emailInput.isEmpty() ? null : emailInput);
+        System.out.print("Enter Phone  : ");
+        String phoneInput = scanner.nextLine();
+        customerProfileReq.setPhone(phoneInput.isEmpty() ? null : phoneInput);
+
+        String RETURN_MESSAGE = customerServiceImpl.deleteCustomer(customerProfileReq);
+        System.out.println(RETURN_MESSAGE);
     }
 
 }

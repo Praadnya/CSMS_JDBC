@@ -31,4 +31,14 @@ public class CustomerServiceImpl implements CustomerService {
         }
 
     }
+
+    @Override
+    public String deleteCustomer(CustomerProfileReq customerProfileReq) {
+        try {
+            CustomerProfileValidator.validateCustomerProfileReq(customerProfileReq);
+            return customerDaoImpl.deleteCustomer(customerProfileReq);
+        }catch (IllegalArgumentException | NullPointerException e){
+            return e.getMessage();
+        }
+    }
 }

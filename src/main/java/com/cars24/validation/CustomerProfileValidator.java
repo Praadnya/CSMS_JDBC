@@ -22,7 +22,7 @@ public class CustomerProfileValidator {
     }
 
     private static void validateCustomerEmail(String email){
-        if(email.length() < 10 || email.length() > 75) {
+        if(email.length() < 6 || email.length() > 75) {
             throw new IllegalArgumentException("Email ID should be 10 to 75 characters only!!");
         }
     }

@@ -10,7 +10,7 @@ import java.util.List;
 public interface CustomerDao {
 //    public String createCustomer(String name, String phone, String email, String address);
     public String createCustomer(AddCustomerReq addCustomerReq);
-//    public boolean deleteCustomer();
+    public String deleteCustomer(CustomerProfileReq customerProfileReq);
     public CustomerProfileRes getCustomer(CustomerProfileReq customerProfileReq);
 //    public boolean updateCustomerById();
 //    public List<CustomersEntity> getCustomers();
