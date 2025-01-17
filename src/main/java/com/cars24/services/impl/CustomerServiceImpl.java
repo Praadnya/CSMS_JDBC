@@ -3,9 +3,11 @@ package com.cars24.services.impl;
 import com.cars24.dao.impl.CustomerDaoImpl;
 import com.cars24.data.req.AddCustomerReq;
 import com.cars24.data.req.CustomerProfileReq;
+import com.cars24.data.req.UpdateCustomerReq;
 import com.cars24.data.res.CustomerProfileRes;
 import com.cars24.services.CustomerService;
 import com.cars24.validation.CustomerProfileValidator;
+import com.cars24.validation.CustomerUpdateValidator;
 import com.cars24.validation.CustomerValidator;
 
 public class CustomerServiceImpl implements CustomerService {
@@ -38,6 +40,16 @@ public class CustomerServiceImpl implements CustomerService {
             CustomerProfileValidator.validateCustomerProfileReq(customerProfileReq);
             return customerDaoImpl.deleteCustomer(customerProfileReq);
         }catch (IllegalArgumentException | NullPointerException e){
+            return e.getMessage();
+        }
+    }
+
+    @Override
+    public String updateCustomerProfile(UpdateCustomerReq updateCustomerReq) {
+        try{
+            CustomerUpdateValidator.validateUpdateCustomerReq(updateCustomerReq);
+            return customerDaoImpl.updateCustomer(updateCustomerReq);
+        }catch(IllegalArgumentException e){
             return e.getMessage();
         }
     }
