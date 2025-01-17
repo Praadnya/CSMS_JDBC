@@ -33,7 +33,7 @@ public class CustomerValidator {
         if(email == null){
             throw new IllegalArgumentException("Email ID cannot be EMPTY!!");
         }
-        if(email.length() < 10 || email.length() > 75) {
+        if(email.length() < 6 || email.length() > 75) {
             throw new IllegalArgumentException("Email ID should be 10 to 75 characters only!!");
         }
     }
@@ -42,7 +42,7 @@ public class CustomerValidator {
         if(address == null){
             throw new IllegalArgumentException("Address cannot be EMPTY!!");
         }
-        if(address.length() < 5 || address.length() > 75) {
+        if(address.length() < 3 || address.length() > 75) {
             throw new IllegalArgumentException("Address should be 5 to 75 characters only!!");
         }
     }

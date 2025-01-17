@@ -11,7 +11,7 @@ public class Main {
         boolean exit = false;
         while (!exit){
             System.out.println("Enter choice: ");
-            System.out.println("0. Exit \n1. Add Customer \n2. GetCustomerProfile");
+            System.out.println("0. Exit \n1. Add Customer \n2. Search Customer Profile \n3. Delete Customer Profile\n");
             Integer choice = null;
 
             try {
@@ -28,6 +28,9 @@ public class Main {
                     break;
                 case 2:
                     Ui.getCustomer();
+                    break;
+                case 3:
+                    Ui.deleteCustomer();
                     break;
                 case 0:
                     exit = true;
